@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Amira | Personal Portfolio</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --blue: #3478C8;
+            --dark-blue: #17365D;
+            --light-blue: #EAF3FC;
+            --background: #F5F8FC;
+            --white: #FFFFFF;
+            --black: #17212F;
+            --muted: #657386;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--black);
+            line-height: 1.7;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: var(--white);
+            padding: 18px 0;
+            box-shadow: 0 2px 10px rgba(23, 54, 93, 0.10);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            color: var(--dark-blue);
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav ul a {
+            color: var(--black);
+            font-size: 13px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        nav ul a:hover {
+            color: var(--blue);
+        }
+
+        /* Home */
+        .hero {
+            padding: 75px 0;
+            background: linear-gradient(
+                135deg,
+                #F5F8FC,
+                #DCEBFA
+            );
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 40px;
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+        }
+
+        .hero-text h2 {
+            font-size: 23px;
+            color: var(--blue);
+            margin-bottom: 15px;
+        }
+
+        .hero-text p {
+            margin-bottom: 25px;
+            color: var(--muted);
+        }
+
+        /* Profile Picture */
+        .profile-container {
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .profile-image {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 6px solid var(--white);
+            object-fit: cover;
+            box-shadow: 0 5px 20px rgba(23, 54, 93, 0.18);
+            display: block;
+            margin: auto;
+        }
+
+        .profile-name {
+            color: var(--dark-blue);
+            font-size: 22px;
+            margin-top: 15px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background-color: var(--blue);
+            color: var(--white);
+            padding: 11px 22px;
+            border-radius: 25px;
+            margin: 5px 5px 5px 0;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-blue);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--blue);
+            color: var(--dark-blue);
+        }
+
+        .btn-outline:hover {
+            color: var(--white);
+        }
+
+        /* General Sections */
+        section {
+            padding: 55px 0;
+            scroll-margin-top: 85px;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--dark-blue);
+            font-size: 28px;
+            margin-bottom: 28px;
+        }
+
+        .section-description {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--muted);
+        }
+
+        .card {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(23, 54, 93, 0.08);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(23, 54, 93, 0.12);
+        }
+
+        /* About */
+        #about {
+            background-color: var(--white);
+        }
+
+        .about-card {
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+            border-top: 4px solid var(--blue);
+        }
+
+        /* Education */
+        #education {
+            background-color: var(--light-blue);
+        }
+
+        .education-card {
+            max-width: 700px;
+            margin: auto;
+            text-align: center;
+            border-left: 5px solid var(--blue);
+        }
+
+        .education-card h3 {
+            color: var(--dark-blue);
+            margin-bottom: 8px;
+        }
+
+        /* Skills */
+        #skills {
+            background-color: var(--background);
+        }
+
+        .skills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .skill {
+            background-color: var(--white);
+            color: var(--dark-blue);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(23, 54, 93, 0.10);
+            font-weight: bold;
+            min-width: 130px;
+            text-align: center;
+            border-bottom: 4px solid var(--blue);
+            transition: 0.3s;
+        }
+
+        .skill:hover {
+            background-color: var(--light-blue);
+            transform: translateY(-5px);
+        }
+
+        /* Projects */
+        #projects {
+            background-color: var(--light-blue);
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 25px;
+        }
+
+        .project-card {
+            border-top: 4px solid var(--blue);
+        }
+
+        .project-card h3 {
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+        }
+
+        .project-tag {
+            display: inline-block;
+            background-color: var(--light-blue);
+            color: var(--dark-blue);
+            padding: 5px 12px;
+            border-radius: 15px;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        /* Contact */
+        #contact {
+            background-color: var(--white);
+        }
+
+        .contact-card {
+            max-width: 700px;
+            margin: auto;
+            text-align: center;
+            border-top: 4px solid var(--blue);
+        }
+
+        .contact-card p {
+            margin-bottom: 12px;
+        }
+
+        .contact-card a {
+            color: var(--blue);
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-blue);
+            color: var(--white);
+            text-align: center;
+            padding: 22px 15px;
+        }
+
+        /* Mobile Design */
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-direction: column;
+            }
+
+            nav ul {
+                justify-content: center;
+                gap: 10px 12px;
+            }
+
+            nav ul a {
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 50px 0;
+            }
+
+            .hero-content {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 31px;
+            }
+
+            .hero-text h2 {
+                font-size: 20px;
+            }
+
+            .profile-image {
+                width: 170px;
+                height: 170px;
+            }
+
+            .profile-name {
+                font-size: 20px;
+            }
+
+            .projects {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 40px 0;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .logo {
+                font-size: 21px;
+            }
+
+            .hero-text h1 {
+                font-size: 27px;
+            }
+
+            .btn {
+                padding: 10px 15px;
+            }
+
+            .skill {
+                min-width: 105px;
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="container nav-content">
+
+            <a href="#home" class="logo">Amira Portfolio</a>
+
+            <ul>
+                <li><a href="#home">Home | الرئيسية</a></li>
+                <li><a href="#about">About | نبذة عني</a></li>
+                <li><a href="#education">Education | التعليم</a></li>
+                <li><a href="#skills">Skills | مهاراتي</a></li>
+                <li><a href="#projects">Projects | مشروعاتي</a></li>
+                <li><a href="#contact">Contact | تواصل معي</a></li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <header class="hero" id="home">
+        <div class="container hero-content">
+
+            <div class="hero-text">
+
+                <h1>Hello, I'm Amira! | مرحبًا، أنا أميرة!</h1>
+
+                <h2>MIS Student | طالبة نظم المعلومات الإدارية</h2>
+
+                <p>
+                    Welcome to my personal portfolio.
+                    <br>
+                    مرحبًا بكم في موقعي الشخصي.
+                </p>
+
+                <a href="#projects" class="btn">
+                    View My Projects | عرض مشروعاتي
+                </a>
+
+                <a href="#contact" class="btn btn-outline">
+                    Contact Me | تواصلي معي
+                </a>
+
+            </div>
+
+            <div class="profile-container">
+
+                <!-- ضعِي صورتك باسم amira.jpg في مجلد الموقع -->
+                <img src="file:///storage/emulated/0/Android/data/com.teejay.trebedit/files/TrebEdit user files/Sample project - Acme/img/IMG_20261015_192159.jpg#8098ffe6"
+                     alt="Amira Abdelaziz"
+                     class="profile-image">
+
+                <h3 class="profile-name">Amira Abdelaziz</h3>
+
+            </div>
+
+        </div>
+    </header>
+
+    <main>
+
+        <!-- About Me -->
+        <section id="about">
+            <div class="container">
+
+                <h2 class="section-title">
+                    About Me | نبذة عني
+                </h2>
+
+                <div class="card about-card">
+
+                    <p>
+                        I am a Management Information Systems (MIS) student.
+                    </p>
+
+                    <p dir="rtl">
+                        أنا طالبة نظم المعلومات الإدارية.
+                    </p>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Education -->
+        <section id="education">
+            <div class="container">
+
+                <h2 class="section-title">
+                    Education | التعليم
+                </h2>
+
+                <div class="card education-card">
+
+                    <h3>
+                        Management Information Systems (MIS)
+                    </h3>
+
+                    <p>University Student | طالبة جامعية</p>
+
+                    <p>
+                        Studying information systems, programming,
+                        and business technology.
+                    </p>
+
+                    <p dir="rtl">
+                        أدرس نظم المعلومات والبرمجة وتكنولوجيا الأعمال.
+                    </p>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Skills -->
+        <section id="skills">
+            <div class="container">
+
+                <h2 class="section-title">
+                    My Skills | مهاراتي
+                </h2>
+
+                <p class="section-description">
+                    Programming languages and technologies I am learning.
+                    <br>
+                    لغات البرمجة والتقنيات التي أتعلمها.
+                </p>
+
+                <div class="skills">
+
+                    <div class="skill">HTML</div>
+                    <div class="skill">CSS</div>
+                    <div class="skill">C++</div>
+                    <div class="skill">Python</div>
+                    <div class="skill">SQL</div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section id="projects">
+            <div class="container">
+
+                <h2 class="section-title">
+                    My Projects | مشروعاتي
+                </h2>
+
+                <p class="section-description">
+                    My learning projects.
+                    <br>
+                    مشروعاتي التعليمية والتطبيقية.
+                </p>
+
+                <div class="projects">
+
+                    <div class="card project-card">
+
+                        <h3>
+                            Personal Portfolio Website
+                        </h3>
+
+                        <p>
+                            A personal website designed to introduce me
+                            and present my skills using HTML and CSS.
+                        </p>
+
+                        <p dir="rtl">
+                            موقع شخصي للتعريف بي وعرض مهاراتي باستخدام
+                            HTML وCSS.
+                        </p>
+
+                        <span class="project-tag">
+                            HTML & CSS
+                        </span>
+
+                    </div>
+
+                    <div class="card project-card">
+
+                        <h3>Future Projects | مشروعات مستقبلية</h3>
+
+                        <p>
+                            I am continuing to learn programming
+                            and practice new technologies.
+                        </p>
+
+                        <p dir="rtl">
+                            أواصل تعلم البرمجة والتدرب على تقنيات جديدة.
+                        </p>
+
+                        <span class="project-tag">
+                            Learning & Practice
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact">
+            <div class="container">
+
+                <h2 class="section-title">
+                    Contact Me | تواصل معي
+                </h2>
+
+                <div class="card contact-card">
+
+                    <p>
+                        Thank you for visiting my portfolio!
+                    </p>
+
+                    <p dir="rtl">
+                        شكرًا لزيارة موقعي الشخصي!
+                    </p>
+
+                    <p>
+                        Email | البريد الإلكتروني:
+                        <a href="mailto:amira@example.com">
+                            amira@example.com
+                        </a>
+                    </p>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            &copy; 2026 Amira Portfolio. All Rights Reserved.
+        </p>
+        <p dir="rtl">
+            جميع الحقوق محفوظة.
+        </p>
+    </footer>
+
+</body>
+</html>
