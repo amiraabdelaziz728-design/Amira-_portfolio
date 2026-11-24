@@ -1,0 +1,511 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>نظام إدارة و تحليل نتائج الطلاب</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #F0E8F8;
+    margin: 0;
+    padding: 20px;
+    color: #654477;
+}
+
+.container {
+    max-width: 750px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(101,68,119,0.15);
+}
+
+h2 {
+    text-align: center;
+    color: #654477;
+}
+
+.subtitle {
+    text-align: center;
+    color: #987DAA;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    color: #654477;
+    border-right: 4px solid #B99ACD;
+    padding-right: 10px;
+    margin-top: 25px;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 7px;
+    border: 1px solid #DCCCE9;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #80619A;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.add-btn {
+    background: #80619A;
+}
+
+.mercy-btn {
+    background: #B99ACD;
+}
+
+button:active {
+    opacity: 0.8;
+}
+
+.error-box {
+    display: none;
+    background: #FFF0F0;
+    color: #DC3545;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.result-box {
+    background: #F8F4FC;
+    border: 1px solid #DCCCE9;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 10px;
+    min-height: 45px;
+}
+
+
+/* صندوق قائمة الطلاب */
+#studentsBox {
+    background: #E3F0FF;
+    border: 2px solid #79A9DD;
+    color: #174A7E;
+}
+
+/* كل طالب داخل القائمة */
+.student-item {
+    background: #D6E9FF;
+    color: #174A7E;
+    border: 1px solid #79A9DD;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+
+.footer {
+    text-align: center;
+    color: #987DAA;
+    margin-top: 25px;
+    font-size: 13px;
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>نظام إدارة و تحليل نتائج الطلاب</h2>
+
+
+    <h3 class="section-title">إضافة طالب جديد</h3>
+
+    <label>اسم الطالب</label>
+    <input type="text" id="studentName" placeholder="أدخل اسم الطالب">
+
+    <label>درجة المادة الأولى</label>
+    <input type="number" id="grade1" placeholder="من 0 إلى 100">
+
+    <label>درجة المادة الثانية</label>
+    <input type="number" id="grade2" placeholder="من 0 إلى 100">
+
+    <label>درجة المادة الثالثة</label>
+    <input type="number" id="grade3" placeholder="من 0 إلى 100">
+
+    <label>نسبة الحضور</label>
+    <input type="number" id="attendance" placeholder="من 0 إلى 100">
+
+    <button class="add-btn" id="addBtn">
+        إضافة طالب
+    </button>
+
+    <button class="mercy-btn" id="mercyBtn">
+        تفعيل لجنة الرأفة
+    </button>
+
+    <div id="errorBox" class="error-box"></div>
+
+    <h3 class="section-title">قائمة الطلاب</h3>
+
+    <div id="studentsBox" class="result-box">
+        لم يتم إضافة طلاب حتى الآن.
+    </div>
+
+    <h3 class="section-title">
+        التقرير النهائي للجنة الرأفة
+    </h3>
+
+    <div id="reportBox" class="result-box">
+        لم يتم تفعيل لجنة الرأفة بعد.
+    </div>
+
+    <div class="footer">
+        Student Results Management System
+    </div>
+
+</div>
+
+
+<script>
+
+// مصفوفة حفظ الطلاب
+
+let studentsList = [];
+
+
+// Class Student
+
+class Student {
+
+    #grades;
+    #attendance;
+
+    constructor(name, grades, attendance) {
+
+        if (!name.trim()) {
+            throw new Error("من فضلك أدخل اسم الطالب");
+        }
+
+        this.name = name;
+
+        this.grades = grades;
+
+        this.attendance = attendance;
+
+    }
+
+
+    // Set حماية الدرجات
+
+    set grades(value) {
+
+        if (!Array.isArray(value) || value.length !== 3) {
+            throw new Error("يجب إدخال درجات المواد الثلاث");
+        }
+
+        for (let grade of value) {
+
+            if (grade === "" || !Number.isFinite(grade)) {
+                throw new Error("يجب إدخال جميع الدرجات");
+            }
+
+            if (grade < 0 || grade > 100) {
+                throw new Error("الدرجة يجب أن تكون من 0 إلى 100");
+            }
+
+        }
+
+        this.#grades = value;
+
+    }
+
+
+    // Set حماية الحضور
+
+    set attendance(value) {
+
+        if (value === "" || !Number.isFinite(value)) {
+            throw new Error("من فضلك أدخل نسبة الحضور");
+        }
+
+        if (value < 0 || value > 100) {
+            throw new Error("نسبة الحضور يجب أن تكون من 0 إلى 100");
+        }
+
+        this.#attendance = value;
+
+    }
+
+
+    // Get متوسط الدرجات
+
+    get average() {
+
+        let total = this.#grades.reduce(
+            (sum, grade) => sum + grade, 0
+        );
+
+        return total / this.#grades.length;
+
+    }
+
+
+    get attendance() {
+        return this.#attendance;
+    }
+
+}
+
+
+// عناصر الصفحة
+
+let studentName = document.getElementById("studentName");
+
+let grade1 = document.getElementById("grade1");
+let grade2 = document.getElementById("grade2");
+let grade3 = document.getElementById("grade3");
+
+let attendance = document.getElementById("attendance");
+
+let addBtn = document.getElementById("addBtn");
+let mercyBtn = document.getElementById("mercyBtn");
+
+let errorBox = document.getElementById("errorBox");
+let studentsBox = document.getElementById("studentsBox");
+let reportBox = document.getElementById("reportBox");
+
+
+// عرض الطلاب
+
+function displayStudents() {
+
+    studentsBox.innerHTML = "";
+
+    studentsList.forEach(function(student, index) {
+
+        let item = document.createElement("div");
+
+        item.className = "student-item";
+
+        item.textContent =
+            "الطالب " + (index + 1) +
+            " : " + student.name +
+            " | المتوسط: " + student.average.toFixed(2) +
+            " | الحضور: " + student.attendance + "%";
+
+        studentsBox.appendChild(item);
+
+    });
+
+}
+
+
+// زر إضافة طالب
+
+addBtn.onclick = function() {
+
+    try {
+
+        errorBox.style.display = "none";
+        errorBox.textContent = "";
+
+        let name = studentName.value;
+
+        let grades = [
+            grade1.value === "" ? "" : Number(grade1.value),
+            grade2.value === "" ? "" : Number(grade2.value),
+            grade3.value === "" ? "" : Number(grade3.value)
+        ];
+
+        let attendanceValue =
+            attendance.value === "" ? "" : Number(attendance.value);
+
+
+        // إنشاء Object
+
+        let student = new Student(
+            name,
+            grades,
+            attendanceValue
+        );
+
+
+        // إضافة الطالب
+
+        studentsList.push(student);
+
+        displayStudents();
+
+
+        // تفريغ الحقول
+
+        studentName.value = "";
+        grade1.value = "";
+        grade2.value = "";
+        grade3.value = "";
+        attendance.value = "";
+
+        reportBox.textContent =
+            "تمت إضافة طالب جديد. اضغط تفعيل لجنة الرأفة لتحديث التقرير.";
+
+    }
+
+    catch(error) {
+
+        errorBox.textContent = error.message;
+        errorBox.style.display = "block";
+
+    }
+
+};
+
+
+// زر لجنة الرأفة
+
+mercyBtn.onclick = function() {
+
+    errorBox.style.display = "none";
+
+
+    // Filter استخراج المتعثرين
+
+    let strugglingStudents = studentsList.filter(
+        student => student.average >= 40 &&
+                   student.average <= 49
+    );
+
+
+    if (strugglingStudents.length === 0) {
+
+        reportBox.innerHTML = `
+            <h3>التقرير النهائي</h3>
+            <p>عدد الطلاب المتعثرين: 0</p>
+            <p>لا يوجد طلاب تنطبق عليهم شروط لجنة الرأفة.</p>
+        `;
+
+        return;
+
+    }
+
+
+    // Map إضافة خمس درجات
+
+    let adjustedStudents = strugglingStudents.map(
+        student => {
+
+            return {
+                name: student.name,
+                newAverage: student.average + 5
+            };
+
+        }
+    );
+
+
+    // Reduce جمع المتوسطات
+
+    let total = adjustedStudents.reduce(
+        (sum, student) => sum + student.newAverage,
+        0
+    );
+
+
+    // حساب المتوسط العام
+
+    let generalAverage = 0;
+
+    if (adjustedStudents.length > 0) {
+
+        generalAverage = total / adjustedStudents.length;
+
+    }
+
+
+    // Template Literals التقرير النهائي
+
+    let report = `
+
+        <h3>التقرير النهائي للجنة الرأفة</h3>
+
+        <p>
+            عدد الطلاب المتعثرين:
+            <strong>${adjustedStudents.length}</strong>
+        </p>
+
+        <hr>
+
+        <h4>أسماء الطلاب:</h4>
+
+        ${adjustedStudents.map(student => `
+
+            <div class="report-item">
+
+                <strong>${student.name.replace(/[&<>"']/g, function(c) {
+                    return {
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        '"': "&quot;",
+                        "'": "&#039;"
+                    }[c];
+                })}</strong>
+
+                <p>
+                    المتوسط بعد الرأفة:
+                    ${student.newAverage.toFixed(2)}
+                </p>
+
+            </div>
+
+        `).join("")}
+
+        <hr>
+
+        <h3>
+            المتوسط العام بعد الرأفة:
+            ${generalAverage.toFixed(2)}
+        </h3>
+
+    `;
+
+
+    reportBox.innerHTML = report;
+
+};
+
+</script>
+
+</body>
+</html>
+
+
